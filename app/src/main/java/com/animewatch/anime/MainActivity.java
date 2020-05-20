@@ -192,50 +192,50 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
-            Call<UpdatePojo> call = service.getCurrentVersion();
-            call.enqueue(new Callback<UpdatePojo>() {
-                @Override
-                public void onResponse(Call<UpdatePojo> call, final Response<UpdatePojo> response) {
-                    Log.e("retro","finish");
-                    Log.e("updater", "current verion is: "+Constants.APP_VER);
-                    if (Integer.parseInt(response.body().getVersion()) > Constants.APP_VER){
-                        new AlertDialog.Builder(context)
-                                .setTitle("Update available!")
-                                .setMessage("There is a new version available for Anistream. Press OK to install the new version")
-
-                                // Specifying a listener allows you to take an action before dismissing the dialog.
-                                // The dialog is automatically dismissed when a dialog button is clicked.
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        // Continue with delete operation
-                                        /*Intent updateIntent = new Intent(Intent.ACTION_VIEW,
-                                                Uri.parse("https://cobaltmedia.xyz/updater/anistream.apk"));
-                                        startActivity(updateIntent);*/
-                                        Intent intent = new Intent(context, DownloadActivity.class);
-                                        intent.putStringArrayListExtra("releasenote", (ArrayList<String>) response.body().getReleaseNotes());
-                                        intent.putExtra("FILEURL",  response.body().getUrl());
-                                        intent.putExtra("FILENAME", response.body().getFileName());
-                                        startActivity(intent);
-
-
-                                    }
-                                })
-
-                                // A null listener allows the button to dismiss the dialog and take no further action.
-                                .setNegativeButton(android.R.string.no, null)
-                                .setIcon(android.R.drawable.ic_dialog_alert)
-                                .show();
-                    }else {
-
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<UpdatePojo> call, Throwable t) {
-                    Log.e("retro","failed "+t);
-                }
-            });
+//            GetDataService service = RetrofitClientInstance.getRetrofitInstance().create(GetDataService.class);
+//            Call<UpdatePojo> call = service.getCurrentVersion();
+//            call.enqueue(new Callback<UpdatePojo>() {
+//                @Override
+//                public void onResponse(Call<UpdatePojo> call, final Response<UpdatePojo> response) {
+//                    Log.e("retro","finish");
+//                    Log.e("updater", "current verion is: "+Constants.APP_VER);
+//                    if (Integer.parseInt(response.body().getVersion()) > Constants.APP_VER){
+//                        new AlertDialog.Builder(context)
+//                                .setTitle("Update available!")
+//                                .setMessage("There is a new version available for Watch Anime. Press OK to install the new version")
+//
+//                                // Specifying a listener allows you to take an action before dismissing the dialog.
+//                                // The dialog is automatically dismissed when a dialog button is clicked.
+//                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        // Continue with delete operation
+//                                        /*Intent updateIntent = new Intent(Intent.ACTION_VIEW,
+//                                                Uri.parse("https://cobaltmedia.xyz/updater/anistream.apk"));
+//                                        startActivity(updateIntent);*/
+//                                        Intent intent = new Intent(context, DownloadActivity.class);
+//                                        intent.putStringArrayListExtra("releasenote", (ArrayList<String>) response.body().getReleaseNotes());
+//                                        intent.putExtra("FILEURL",  response.body().getUrl());
+//                                        intent.putExtra("FILENAME", response.body().getFileName());
+//                                        startActivity(intent);
+//
+//
+//                                    }
+//                                })
+//
+//                                // A null listener allows the button to dismiss the dialog and take no further action.
+//                                .setNegativeButton(android.R.string.no, null)
+//                                .setIcon(android.R.drawable.ic_dialog_alert)
+//                                .show();
+//                    }else {
+//
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<UpdatePojo> call, Throwable t) {
+//                    Log.e("retro","failed "+t);
+//                }
+//            });
 
 
 
