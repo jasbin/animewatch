@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.anistream.xyz.likebutton.DotsView
+    <com.animewatch.anime.likebutton.DotsView
         android:id="@+id/dots"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
 
-    <com.anistream.xyz.likebutton.CircleView
+    <com.animewatch.anime.likebutton.CircleView
         android:id="@+id/circle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
