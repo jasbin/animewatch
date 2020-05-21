@@ -285,7 +285,8 @@ public class MainActivity extends AppCompatActivity {
         donate.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.anistream.xyz/donate.html"));
+//                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.anistream.xyz/donate.html"));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.donategarnus.com/"));
                 startActivity(browserIntent);
                 return false;
             }

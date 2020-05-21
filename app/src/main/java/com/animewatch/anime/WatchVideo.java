@@ -30,12 +30,14 @@ import com.animewatch.anime.database.WatchedEp;
 import com.animewatch.anime.scrapers.Option1;
 import com.animewatch.anime.scrapers.Option2;
 import com.animewatch.anime.scrapers.Scraper;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Player;
 
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ClippingMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
@@ -356,7 +358,12 @@ public class WatchVideo extends AppCompatActivity {
                 DefaultHttpDataSourceFactory dataSourceFactory = getSettedHeadersDataFactory();
                 HlsMediaSource hlsMediaSource =
                         new HlsMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(qualities.get(currentQuality).getQualityUrl()));
-                player.prepare(hlsMediaSource);
+                ClippingMediaSource clippingSource =
+                        new ClippingMediaSource(
+                                hlsMediaSource,
+                                /* startPositionUs= */ 13_000_000,
+                                /* endPositionUs= */ C.TIME_END_OF_SOURCE);
+                player.prepare(clippingSource);
                 player.setPlayWhenReady(true);
                 if (changedScraper) {
                     changedScraper = false;
@@ -367,8 +374,6 @@ public class WatchVideo extends AppCompatActivity {
                  Log.i("exoerror","quality size was "+ qualities.size());
             }
             player.addListener(new Player.EventListener() {
-
-
                 @Override
                 public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                     if (playbackState == ExoPlayer.STATE_ENDED) {
@@ -388,15 +393,11 @@ public class WatchVideo extends AppCompatActivity {
                     }
                 }
 
-
-
                 @Override
                 public void onPlayerError(ExoPlaybackException error) {
                     Log.i("exoerror",error.getMessage());
 
                 }
-
-
 
             });
             progressBar.setVisibility(View.GONE);
@@ -414,7 +415,6 @@ public class WatchVideo extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
-
         time = player.getCurrentPosition();
     }
 
@@ -423,17 +423,12 @@ public class WatchVideo extends AppCompatActivity {
         super.onStop();
         time = player.getCurrentPosition();
         player.setPlayWhenReady(false);
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-
         player.setPlayWhenReady(true);
-
-
     }
 
     @Override
