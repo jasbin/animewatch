@@ -98,7 +98,7 @@ public class Settings extends AppCompatActivity {
 
     }
 
-    public void discord (View view) { discordurl ( "https://discord.gg/z9HSVvD"); }
+    public void discord (View view) { discordurl ( "https://discord.gg/WtF3xZ"); }
 
     private void discordurl (String url) {
         Uri uriUrl = Uri.parse(url);
@@ -106,7 +106,7 @@ public class Settings extends AppCompatActivity {
         startActivity(launchBrowser);
     }
 
-    public void changes (View view) { changeurl ( "https://cobaltmedia.xyz/changelog"); }
+    public void changes (View view) { changeurl ( "http://animewatch.ml"); }
 
     private void changeurl (String url) {
         Uri uriUrl = Uri.parse(url);

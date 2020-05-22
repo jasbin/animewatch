@@ -72,15 +72,15 @@
                 android:text="Restore Data"
                 android:textColor="#FFFFFF"/>
         <View style="@style/Divider"/>
-        <Button
-                android:id="@+id/buttonchangelog"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:onClick="changes"
-                android:background="@android:color/transparent"
-                android:text="Changelog"
-                android:textColor="#FFFFFF"/>
+<!--        <Button-->
+<!--                android:id="@+id/buttonchangelog"-->
+<!--                android:layout_width="fill_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:onClick="changes"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                android:text="Changelog"-->
+<!--                android:textColor="#FFFFFF"/>-->
         <View style="@style/Divider"/>
     </LinearLayout>
     <LinearLayout
@@ -94,7 +94,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/medium"
-        android:text="Powered by https://anistream.xyz"
+        android:text="@string/poweredby"
         android:textAlignment="center"
         android:textSize="14sp" />
 
@@ -103,7 +103,7 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"
         android:fontFamily="@font/medium"
-        android:text="© COBALT MEDIA 2020"
+        android:text="@string/copyright"
         android:textAlignment="center"
         android:textSize="13sp" />
     </LinearLayout>

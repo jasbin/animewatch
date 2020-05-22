@@ -288,16 +288,17 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        MenuItem donate = menu.findItem(R.id.donate);
-        donate.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-//                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.anistream.xyz/donate.html"));
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.donategarnus.com/"));
-                startActivity(browserIntent);
-                return false;
-            }
-        });
+        //donate menu
+//        MenuItem donate = menu.findItem(R.id.donate);
+//        donate.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//            @Override
+//            public boolean onMenuItemClick(MenuItem item) {
+////                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.anistream.xyz/donate.html"));
+//                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.donategarnus.com/"));
+//                startActivity(browserIntent);
+//                return false;
+//            }
+//        });
 
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
