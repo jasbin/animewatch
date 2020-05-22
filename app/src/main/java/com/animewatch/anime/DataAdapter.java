@@ -20,6 +20,10 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.animewatch.anime.database.WatchedEp;
+import com.animewatch.anime.helper.Utilis;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -43,6 +47,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
     int lastPosition = -1;
     private Realm realm;
     private Activity activity;
+    private  InterstitialAd mInterstitialAd;
 
     DataAdapter(Context context, ArrayList<String> AnimeList, ArrayList<String> SiteList, ArrayList<String> ImageList, ArrayList<String> EpisodeList, Activity activity) {
         this.mAnimeList = AnimeList;
@@ -86,6 +91,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_data, parent, false);
+
+        loadInterstitialAds();
 
         return new MyViewHolder(itemView);
     }
@@ -131,21 +138,25 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
             @Override
             public void onClick(View v) {
                 if (!isBookmark) {
-                    Intent intent = new Intent(context, WatchVideo.class);
-                    intent.putExtra("link", mSiteLink.get(position));
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    int ep = holder.episodeno.getText().toString().lastIndexOf(" ");
-                    size = 0;
-                    recent.execSQL("delete from anime where EPISODELINK='" + holder.animeuri.toString() + "'");
-                    String z = "'" + holder.title.getText().toString().replaceAll("'","''")  + "','" + holder.episodeno.getText().toString() + "','" + holder.animeuri.toString() + "','" + mImageLink.get(position) + "'"; //sql string
-                    recent.execSQL("INSERT INTO anime VALUES(" + z + ");");
-                    intent.putExtra("noofepisodes", holder.episodeno.getText().toString().substring(ep + 1, holder.episodeno.getText().toString().length()));
-                    intent.putExtra("animename", holder.title.getText().toString());
-                    intent.putExtra("imagelink", mImageLink.get(position));
-                    intent.putExtra("size", size);
-                    intent.putExtra("camefrom", "mainactivity");
+                    // Has the interstitial loaded successfully?
+                    // If it has loaded, perform these actions
+                    if(mInterstitialAd.isLoaded()) {
+                        // Step 1: Display the interstitial
+                        mInterstitialAd.show();
+                        // Step 2: Attach an AdListener
+                        mInterstitialAd.setAdListener(new AdListener() {
+                            @Override
+                            public void onAdClosed() {
+                                // Step 2.1: Load another ad
+                                loadAnimeEpisode(holder,position);
 
-                    context.getApplicationContext().startActivity(intent);
+                            }
+                        });
+                    }
+                    // If it has not loaded due to any reason simply load the next activity
+                    else {
+                        loadAnimeEpisode(holder,position);
+                    }
 
                 }else {
                     Log.e("linkA",mSiteLink.get(position));
@@ -173,6 +184,22 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
                 fit().centerCrop().into(holder.imageofanime);
 
     }
+    void loadAnimeEpisode(MyViewHolder holder,int position){
+        Intent intent = new Intent(context, WatchVideo.class);
+        intent.putExtra("link", mSiteLink.get(position));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        int ep = holder.episodeno.getText().toString().lastIndexOf(" ");
+        size = 0;
+        recent.execSQL("delete from anime where EPISODELINK='" + holder.animeuri.toString() + "'");
+        String z = "'" + holder.title.getText().toString().replaceAll("'","''")  + "','" + holder.episodeno.getText().toString() + "','" + holder.animeuri.toString() + "','" + mImageLink.get(position) + "'"; //sql string
+        recent.execSQL("INSERT INTO anime VALUES(" + z + ");");
+        intent.putExtra("noofepisodes", holder.episodeno.getText().toString().substring(ep + 1, holder.episodeno.getText().toString().length()));
+        intent.putExtra("animename", holder.title.getText().toString());
+        intent.putExtra("imagelink", mImageLink.get(position));
+        intent.putExtra("size", size);
+        intent.putExtra("camefrom", "mainactivity");
+        context.getApplicationContext().startActivity(intent);
+    }
     void setFilter(ArrayList<String> animelist, ArrayList<String> animelink, ArrayList<String> imagelist, ArrayList<String> EpisodeList) {
         mAnimeList = new ArrayList<>();
         mAnimeList.addAll(animelist);
@@ -198,6 +225,13 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.MyViewHolder> 
 
     public void setBookmark(boolean isBookmark){
         this.isBookmark = isBookmark;
+    }
+
+    public void loadInterstitialAds(){
+
+        mInterstitialAd = new InterstitialAd(context);
+        mInterstitialAd.setAdUnitId(context.getString(R.string.interstitial_ad_unit_id));
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
     }
 
 }

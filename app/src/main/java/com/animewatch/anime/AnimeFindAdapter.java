@@ -60,7 +60,6 @@ public class AnimeFindAdapter extends RecyclerView.Adapter<AnimeFindAdapter.MyVi
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.adapterforanimelist, parent, false);
-
         return new MyViewHolder(itemView);
     }
 
@@ -68,6 +67,7 @@ public class AnimeFindAdapter extends RecyclerView.Adapter<AnimeFindAdapter.MyVi
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
         holder.title.setText(mAnimeList.get(position));
         holder.animeuri = Uri.parse(mSiteLink.get(position));
+
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

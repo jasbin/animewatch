@@ -32,7 +32,7 @@
         android:textAlignment="center"
         android:layout_marginTop="50px"
         android:layout_height="wrap_content"
-        android:text="Anistream is an anime streaming app that allows users to stream anime with absolutely no ads and interruptions. Our app has a huge selection of anime that you cant even find on premium streaming services." />
+        android:text="@string/about" />
 
     <Space
         android:layout_width="match_parent"

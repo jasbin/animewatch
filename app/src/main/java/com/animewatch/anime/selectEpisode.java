@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -70,6 +71,8 @@ public class selectEpisode extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.newepisodelayout);
+
+
         recent = openOrCreateDatabase("recent", MODE_PRIVATE, null);
         animenameforrecents = getIntent().getStringExtra("animename");
         Toolbar toolbar = findViewById(R.id.actiontool);
@@ -110,8 +113,6 @@ public class selectEpisode extends AppCompatActivity {
                     }else {
                         epnumber.setText(0 + "/" + separated[1]);                    }
                 }
-
-
 
             }
         };
@@ -370,7 +371,6 @@ public class selectEpisode extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-
 
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (!cameback.equals("false")) {

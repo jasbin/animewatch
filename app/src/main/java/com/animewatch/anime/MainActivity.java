@@ -38,10 +38,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.BoardiesITSolutions.FileDirectoryPicker.DirectoryPicker;
 import com.BoardiesITSolutions.FileDirectoryPicker.OpenFilePicker;
-import com.animewatch.anime.updater.DownloadActivity;
-import com.animewatch.anime.updater.GetDataService;
-import com.animewatch.anime.updater.RetrofitClientInstance;
-import com.animewatch.anime.updater.UpdatePojo;
+import com.animewatch.anime.helper.Utilis;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
@@ -59,9 +57,6 @@ import java.util.Calendar;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.internal.IOException;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
@@ -94,12 +89,22 @@ public class MainActivity extends AppCompatActivity {
     private boolean read = false;
     private Context context;
 
+
+    private AdView mAdView;
+    private Utilis utilis;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         context = this;
+
+        //banner ads
+//        mAdView = findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().build();
+//        mAdView.loadAd(adRequest);
+            //interstitial ads
+        utilis = new Utilis();
+
 
         Realm.init(this);
         // realm = Realm.getDefaultInstance();
@@ -242,6 +247,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         }
+
     }
 
     @Override
@@ -251,7 +257,8 @@ public class MainActivity extends AppCompatActivity {
         MenuItem search = menu.findItem(R.id.action_search);
         MenuItem bookmark = menu.findItem(R.id.bookmark_menu);
         MenuItem animelist = menu.findItem(R.id.animelist);
-
+        //load interstiital ads
+        utilis.loadInterstitialAds(this);
 
         bookmark.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
@@ -291,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -314,7 +322,6 @@ public class MainActivity extends AppCompatActivity {
                         x.cancel(true);
                     x = new Searching();
                     x.execute();
-
                 } else {
                     if (x.getStatus() == AsyncTask.Status.RUNNING)
                         x.cancel(true);
@@ -355,16 +362,13 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
             recyclerView.setVisibility(View.GONE);
-
             progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             try {
-
                 org.jsoup.nodes.Document searching = Jsoup.connect(searchurl).get();
                 DataAdapter = new animefinderadapter();
                 DataAdapter.notifyItemRangeRemoved(0, mAnimeList.size());
@@ -397,16 +401,14 @@ public class MainActivity extends AppCompatActivity {
                 noanime.setVisibility(View.VISIBLE);
             else {
                 recyclerView.setVisibility(View.VISIBLE);
-
                 DataAdapter = new animefinderadapter(getApplicationContext(), mAnimeList, mSiteLink, mImageLink, mEpisodeList, MainActivity.this);
-
-
                 recyclerView.setDrawingCacheEnabled(true);
                 recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
                 recyclerView.setItemViewCacheSize(30);
-
                 recyclerView.setAdapter(DataAdapter);
             }
+            //display interstitial ads before after search results are shown
+            utilis.showInterstitialAds();
         }
     }
 

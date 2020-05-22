@@ -14,11 +14,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.animewatch.anime.database.WatchedEp;
+import com.animewatch.anime.helper.Utilis;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.InterstitialAd;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,6 +46,7 @@ public class episodeadapter extends RecyclerView.Adapter<episodeadapter.MyViewHo
     private Realm realm;
     SelectEpisodeListener selectEpisodeListener;
 
+    private Utilis utilis;
     episodeadapter(Context context, ArrayList<String> SiteList, ArrayList<String> EpisodeList,
                    String imagelink, String animename, Activity activity,List<String> warhcedep,SelectEpisodeListener selectEpisodeListener) {
         this.mSiteLink = SiteList;
@@ -81,6 +86,9 @@ public class episodeadapter extends RecyclerView.Adapter<episodeadapter.MyViewHo
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.adapterforepisode, parent, false);
+
+        utilis = new Utilis();
+        utilis.loadInterstitialAds(context);
 
         return new MyViewHolder(itemView);
     }
@@ -202,29 +210,28 @@ public class episodeadapter extends RecyclerView.Adapter<episodeadapter.MyViewHo
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, WatchVideo.class);
-                intent.putExtra("link", mSiteLink.get(position));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                recent = context.openOrCreateDatabase("recent", Context.MODE_PRIVATE, null);
-                String z = "'" + animename.replaceAll("'","''") + "','Episode " + (position + 1) + "','" + mSiteLink.get(position) + "','" + imagelink + "'";
-                intent.putExtra("animename", animename);
-                intent.putExtra("imagelink", imagelink);
-                recent.execSQL("delete from anime where EPISODELINK='" + mSiteLink.get(position) + "'");
-                recent.execSQL("INSERT INTO anime VALUES(" + z + ");");
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("noofepisodes", String.valueOf(mEpisodeList.size()));
-                intent.putExtra("animenames", animename);
-                intent.putExtra("selectepisodelink", mSiteLink.get(position));
-                intent.putExtra("camefrom", "selectepisode");
-                holder.button.setBackgroundResource(R.drawable.finish_background);
-                if (!"completed".equals(holder.button.getTag())) {
-                    selectEpisodeListener.onStateChanged(+1);
+                Toast.makeText(context, "please wait..", Toast.LENGTH_SHORT).show();
+                if(utilis.isLoaded()) {
+                    // Step 1: Display the interstitial
+                    utilis.showInterstitialAds();
+                    // Step 2: Attach an AdListener
+                    utilis.getInterstitialObj().setAdListener(new AdListener() {
+                        @Override
+                        public void onAdClosed() {
+                            // Step 2.1: Load another ad
+                            loadEpisode(holder,position);
+                        }
+                    });
                 }
-                holder.button.setTag("completed");
-                warhcedep.add(holder.button.getText().toString().trim());
-                context.getApplicationContext().startActivity(intent);
+                // If it has not loaded due to any reason simply load the next activity
+                else {
+                    loadEpisode(holder,position);
+                }
+
             }
         });
+
+
         holder.download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -241,6 +248,29 @@ public class episodeadapter extends RecyclerView.Adapter<episodeadapter.MyViewHo
         lastPosition = position;
     }
 
+    public void loadEpisode(MyViewHolder holder,int position){
+        Intent intent = new Intent(context, WatchVideo.class);
+        intent.putExtra("link", mSiteLink.get(position));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        recent = context.openOrCreateDatabase("recent", Context.MODE_PRIVATE, null);
+        String z = "'" + animename.replaceAll("'","''") + "','Episode " + (position + 1) + "','" + mSiteLink.get(position) + "','" + imagelink + "'";
+        intent.putExtra("animename", animename);
+        intent.putExtra("imagelink", imagelink);
+        recent.execSQL("delete from anime where EPISODELINK='" + mSiteLink.get(position) + "'");
+        recent.execSQL("INSERT INTO anime VALUES(" + z + ");");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("noofepisodes", String.valueOf(mEpisodeList.size()));
+        intent.putExtra("animenames", animename);
+        intent.putExtra("selectepisodelink", mSiteLink.get(position));
+        intent.putExtra("camefrom", "selectepisode");
+        holder.button.setBackgroundResource(R.drawable.finish_background);
+        if (!"completed".equals(holder.button.getTag())) {
+            selectEpisodeListener.onStateChanged(+1);
+        }
+        holder.button.setTag("completed");
+        warhcedep.add(holder.button.getText().toString().trim());
+        context.getApplicationContext().startActivity(intent);
+    }
     @Override
     public int getItemCount() {
         if (mEpisodeList.size() > 12 && usingTemp) {
