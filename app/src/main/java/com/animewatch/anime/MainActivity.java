@@ -39,6 +39,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.BoardiesITSolutions.FileDirectoryPicker.DirectoryPicker;
 import com.BoardiesITSolutions.FileDirectoryPicker.OpenFilePicker;
 import com.animewatch.anime.helper.Utilis;
+import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -99,12 +100,11 @@ public class MainActivity extends AppCompatActivity {
         context = this;
 
         //banner ads
-//        mAdView = findViewById(R.id.adView);
-//        AdRequest adRequest = new AdRequest.Builder().build();
-//        mAdView.loadAd(adRequest);
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
             //interstitial ads
         utilis = new Utilis();
-
 
         Realm.init(this);
         // realm = Realm.getDefaultInstance();

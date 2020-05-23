@@ -210,7 +210,7 @@ public class episodeadapter extends RecyclerView.Adapter<episodeadapter.MyViewHo
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "please wait..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "buffering..", Toast.LENGTH_SHORT).show();
                 if(utilis.isLoaded()) {
                     // Step 1: Display the interstitial
                     utilis.showInterstitialAds();
