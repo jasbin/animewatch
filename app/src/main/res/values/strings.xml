@@ -13,6 +13,11 @@
     <string name="poweredby">Powered by Technical Creations</string>
     <string name="copyright">© Technical Creations 2020</string>
     <string name="app_id">ca-app-pub-6123177725639319~1264848855</string>
+<!--    testads-->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="interstitial_ad_unit_id">ca-app-pub-3940256099942544/1033173712</string>
+
+    <!--    realads-->
+    <!--    <string name="banner_ad_unit_id">ca-app-pub-6123177725639319/3986380960</string>-->
+    <!--    <string name="interstitial_ad_unit_id">ca-app-pub-6123177725639319/7638685519</string>-->
 </resources>
